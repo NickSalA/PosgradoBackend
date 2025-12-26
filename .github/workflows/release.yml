@@ -1,30 +1,43 @@
 name: Semantic Release
+
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 concurrency: release
 
 permissions:
   id-token: write
-  contents: write   # necesario para crear tags y releases
+  contents: write
 
 jobs:
-    release:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v4
-          with:
-            fetch-depth: 0
-        - name: Python Setup
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.12'
-        - name: Install Dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install build 
-        - name: Python Semantic Release
-          uses: python-semantic-release/python-semantic-release@v9.8.0 
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Python Setup
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Instalamos 'build' Y TAMBIÉN 'python-semantic-release' aquí mismo
+          pip install build python-semantic-release
+
+      - name: Python Semantic Release
+        env:
+          # Necesario para que el comando pueda subir cambios a GitHub
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Configuramos git para que el robot tenga identidad
+          git config user.name "Tesista"
+          git config user.email "github-actions@github.com"
+          
+          # Ejecutamos la herramienta directamente
+          semantic-release version
