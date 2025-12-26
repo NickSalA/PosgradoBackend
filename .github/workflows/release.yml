@@ -37,7 +37,7 @@ jobs:
         run: |
           # Configuramos git para que el robot tenga identidad
           git config user.name "Tesista"
-          git config user.email "github-actions@github.com"
+          git config user.email "bot@posgrado.com"
           
           # Ejecutamos la herramienta directamente
           semantic-release version

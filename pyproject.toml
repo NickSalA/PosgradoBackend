@@ -4,6 +4,7 @@ upload_to_pypi = false
 upload_to_release=true
 build_command = "python -m build"
 branch = "main"
+commit_author = "Tesista <bot@posgrado.com>"
 
 [tool.semantic_release.commit_parser_options]
 allowed_tags = ["build", "chore", "ci", "docs", "feat", "fix", "perf", "style", "refactor", "test"]
