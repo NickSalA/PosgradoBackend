@@ -17,7 +17,7 @@ from app.core.exceptions import DatabaseConnectionError, DatabaseQueryError, Dat
 from app.core.config import get_secret
 
 logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger("app")
+logger = logging.getLogger(__name__)
 
 DATABASE_URL = get_secret("DATABASE-URL")
 

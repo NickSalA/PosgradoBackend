@@ -17,7 +17,7 @@ from app.core.exceptions import SecretNotFoundError, SecretEmptyError, AzureAuth
 from app.core.logging_config import LOGGING_CONFIG
 
 logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger("app")
+logger = logging.getLogger(__name__)
 
 VAULT_NAME = "posgrado"
 KV_URL = f"https://{VAULT_NAME}.vault.azure.net"

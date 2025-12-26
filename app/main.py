@@ -38,7 +38,7 @@ from app.modules.cybertesis.controller.router import router as router_cybertesis
 from app.modules.otorgamiento.controller.router import router as router_otorgamiento
 
 logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger("app")
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
