@@ -14,7 +14,6 @@
 - Bautizo al bot
   ([`9d2490d`](https://github.com/NickSalA/PosgradoBackend/commit/9d2490dbdfec2aac7afec47b4e247055cd20c3a6))
 
-
 ## v1.0.0 (2025-12-26)
 
 - Initial Release

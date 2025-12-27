@@ -12,6 +12,9 @@ sqlmodel = "*"
 sqlalchemy.exc = "*"
 psycopg2 = "*"
 itsdangerous = "*"
+pytest = "*"
+httpx = "*"
+pytest-asyncio = "*"
 [dev-packages]
 
 [requires]
