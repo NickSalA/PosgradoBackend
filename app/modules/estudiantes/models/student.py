@@ -28,7 +28,7 @@ class Student(SQLModel, table=True):
     personal_email: Optional[str] = Field(sa_column=Column("correo_personal", String(100), unique=True, nullable=True))
     identity_document: str = Field(sa_column=Column("documento_identidad", String(20), unique=True, nullable=False))
     type_document: TypeDocumentStudent = Field(sa_column=Column("tipo_documento", PgEnum(TypeDocumentStudent, name="estudiante_tipo_documento"), nullable=False))
-    nacionality: Optional[str] = Field(default=None, sa_column=Column("nacionalidad", String(100), nullable=True))
+    nationality: Optional[str] = Field(default=None, sa_column=Column("nacionalidad", String(100), nullable=True))
     status: StatusStudent = Field(sa_column=Column("estado", PgEnum(StatusStudent, name="estudiante_estado"), nullable=False))
     created_at: datetime = Field(default_factory=datetime.now ,sa_column=Column("fecha_creacion", DateTime, nullable=False))
     updated_at: Optional[datetime] = Field(default=None, sa_column=Column("fecha_modificacion", DateTime, nullable=True))

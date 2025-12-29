@@ -15,5 +15,12 @@ patch_tags = ["fix", "perf"]
 [tool.pyright]
 typeCheckingMode = "basic"
 
-[pytest]
+[tool.pylint.messages_control]
+disable = ["C0115"]
+
+[tool.pylint.format]
+max-line-length = 200
+
+[tool.pytest.ini_options]
 env_files = ".test.env"
+testpaths = ["tests"]

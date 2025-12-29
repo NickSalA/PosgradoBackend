@@ -3,7 +3,7 @@ from enum import Enum
 from typing import ClassVar, Optional
 
 from sqlmodel import SQLModel, Field
-from sqlalchemy import Column, Integer, String, Date, CheckConstraint, ForeignKey
+from sqlalchemy import Column, Integer, String, CheckConstraint, ForeignKey
 from sqlalchemy.dialects.postgresql import ENUM as PgEnum
 
 class StatusStudentProgram(str, Enum):
@@ -20,8 +20,8 @@ class ProgramStudent(SQLModel, table=True):
     code: str = Field(sa_column=Column("codigo_alumno", String(8), unique=True, nullable=False))
     curriculum: int = Field(default=None, sa_column=Column("malla_curricular", Integer, nullable=True))
     status: StatusStudentProgram = Field(sa_column=Column("estado", PgEnum(StatusStudentProgram, name="programa_estudiante_estado"), nullable=False))
-    date_start: Date = Field(default=None, sa_column=Column("fecha_inicio", Date, nullable=True))
-    date_end: Optional[Date] = Field(default=None, sa_column=Column("fecha_fin", Date, nullable=True))
+    admission_year: int = Field(sa_column=Column("fecha_inicio", Integer, nullable=False))
+    graduation_year: Optional[int] = Field(default=None, sa_column=Column("fecha_fin", Integer, nullable=True))
 
     __table_args__ = (
         CheckConstraint("codigo_alumno ~ '^[0-9]{8}$'", name="chk_codigo_alumno"),

@@ -39,11 +39,5 @@ except Exception as e: # pylint: disable=broad-except
     logger.exception("Error inesperado al importar la configuración: %s", e)
     sys.exit(1)
 
-
-@app.get("/")
-def home():
-    """Endpoint raíz para verificar que la API está activa."""
-    return {"ok": True, "msg": "API de Posgrado activa."}
-
 if __name__ == "__main__":
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True, log_config=None)
