@@ -10,6 +10,10 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from azure.core.exceptions import ResourceNotFoundError, ClientAuthenticationError
 
+# Pydantic Settings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import Field
+
 # Exceptions
 from app.core.exceptions import SecretNotFoundError, SecretEmptyError, AzureAuthError
 
@@ -23,13 +27,12 @@ VAULT_NAME = "posgrado"
 KV_URL = f"https://{VAULT_NAME}.vault.azure.net"
 
 try:
-    logger.info("Obteniendo credenciales de Azure Key Vault...")
+    logger.debug("Obteniendo credenciales de Azure Key Vault...")
     credential = DefaultAzureCredential()
     client = SecretClient(vault_url=KV_URL, credential=credential)
     logger.debug("Credenciales obtenidas correctamente.")
 
 except Exception as e:
-    logger.exception("Error al obtener credenciales de Azure Key Vault.")
     raise AzureAuthError("Error al obtener credenciales de Azure Key Vault.") from e
 
 def get_secret(name: str) -> str:
@@ -56,3 +59,33 @@ def get_secret(name: str) -> str:
     except Exception:
         logger.exception("Error inesperado al obtener el secreto: %s", name)
         raise
+
+class Settings(BaseSettings):
+    PROJECT_NAME: str = "Posgrado Backend API"
+    GLOBAL_PREFIX: str = "/api/v1"
+    STAGE_PREFIX: str = f"{GLOBAL_PREFIX}/stage"
+    DASHBOARD_PREFIX: str = f"{GLOBAL_PREFIX}/dashboard"
+    CORS_ORIGINS: list[str] = ["http://localhost:8000", "http://localhost:3000"]
+
+    DATABASE_NAME: str = Field(default_factory=lambda: get_secret("DATABASE-NAME"))
+    DATABASE_PASSWORD: str = Field(default_factory=lambda: get_secret("DATABASE-PASSWORD"))
+    DATABASE_USER: str = Field(default_factory=lambda: get_secret("DATABASE-USER"))
+    DATABASE_HOST: str = Field(default_factory=lambda: get_secret("DATABASE-HOST"))
+    DATABASE_PORT: int = Field(default_factory=lambda: int(get_secret("DATABASE-PORT")))
+
+    SECRET_KEY: str = Field(default_factory=lambda: get_secret("SESSION-SECRET-KEY"))
+    LOG_LEVEL: str = "INFO"
+
+    @property
+    def DATABASE_URL(self) -> str:  # pylint: disable=invalid-name
+        """Recupera la URL de la base de datos desde Key Vault o variable de entorno."""
+        if not self.DATABASE_HOST:
+            return "sqlite:///./test.db"
+        return f"postgresql+psycopg2://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}?sslmode=require"
+
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+    )
+
+settings = Settings()

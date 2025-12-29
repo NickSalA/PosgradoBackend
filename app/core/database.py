@@ -13,18 +13,23 @@ from app.core.logging_config import LOGGING_CONFIG
 # Excepciones personalizadas
 from app.core.exceptions import DatabaseConnectionError, DatabaseQueryError, DatabaseIntegrityError
 
-# Importar gestor de secretos
-from app.core.config import get_secret
+# Importar configuración
+from app.core.config import settings
 
 logging.config.dictConfig(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 
-DATABASE_URL = get_secret("DATABASE-URL")
+DATABASE_URL: str = settings.DATABASE_URL
 
 try:
+    # Si es SQLite (para tests), no usamos sslmode
+    connect_args = {}
+    if DATABASE_URL and not str(DATABASE_URL).startswith("sqlite"):
+        connect_args = {"sslmode": "require"}
+
     engine = create_engine(
         DATABASE_URL, echo=False, future=True,
-        pool_pre_ping=True, connect_args={"sslmode": "require"}
+        pool_pre_ping=True, connect_args=connect_args
         )
 except OperationalError as e:
     logger.critical("Error fatal al configurar la conexión a la BD.")
