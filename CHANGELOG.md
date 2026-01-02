@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.2 (2026-01-02)
+
+### Bug Fixes
+
+- Corrección para la conexión con Better Stack para la telemetriá en la nube
+  ([`c7ba3f5`](https://github.com/NickSalA/PosgradoBackend/commit/c7ba3f5b0b0f60b6a9e24913126cef09a5e922e4))
+
+
 ## v1.2.1 (2026-01-02)
 
 ### Bug Fixes
