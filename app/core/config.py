@@ -62,6 +62,7 @@ class Settings(BaseSettings):
     DATABASE_PORT: int = Field(default_factory=lambda: int(get_secret("DATABASE-PORT")))
 
     BETTER_STACK_TOKEN: str = Field(default_factory=lambda: get_secret("BETTER-STACK-TOKEN"))
+    BETTER_STACK_HOST: str = Field(default_factory=lambda: "https://" + get_secret("BETTER-STACK-HOST"))
     SECRET_KEY: str = Field(default_factory=lambda: get_secret("SESSION-SECRET-KEY"))
     LOG_LEVEL: str = "INFO"
 

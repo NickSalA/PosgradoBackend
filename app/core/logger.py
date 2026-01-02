@@ -60,15 +60,12 @@ def setup():
         },
     ]
     if LogtailHandler and settings.BETTER_STACK_TOKEN:
-        handler_better_stack = LogtailHandler(source_token=settings.BETTER_STACK_TOKEN)
+        handler_better_stack = LogtailHandler(source_token=settings.BETTER_STACK_TOKEN, host=settings.BETTER_STACK_HOST)
         handlers.append(
             {
                 "sink": handler_better_stack,
                 "level": "INFO",
                 "format": "{message}",
-                "serialize": True,
-                "diagnose": True,
-                "backtrace": True,
             }
         )
 
