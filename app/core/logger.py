@@ -73,7 +73,16 @@ def setup():
         )
 
     logger.configure(handlers =handlers) # type: ignore
+    logging.getLogger("uvicorn.error").handlers = []
+    logging.getLogger("uvicorn.error").propagate = False
     logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
-    logging.getLogger("uvicorn.error").setLevel(logging.WARNING)
+
+    logging.getLogger("uvicorn.error").handlers = []
+    logging.getLogger("uvicorn.error").propagate = False
+    logging.getLogger("uvicorn.error").setLevel(logging.CRITICAL)
+
+    logging.getLogger("uvicorn").handlers = []
+    logging.getLogger("uvicorn").propagate = False
+
     logging.getLogger("azure.core.pipeline.policies.http_logging_policy").setLevel(logging.WARNING)
     logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)

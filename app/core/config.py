@@ -47,8 +47,6 @@ def get_secret(name: str) -> str:
         raise SecretNotFoundError(f"Secreto {name} no encontrado en Key Vault.") from e
     except ClientAuthenticationError as e:
         raise AzureAuthError("Error de autenticación al acceder a Key Vault.") from e
-    except Exception: 
-        raise
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Posgrado Backend API"
