@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.2.1 (2026-01-02)
+
+### Bug Fixes
+
+- Corrección con el traceback de ASGI application, sin duplicados para el manejo de errores globales
+  ([`a0a9bc7`](https://github.com/NickSalA/PosgradoBackend/commit/a0a9bc7368c385f84807cfcdd5c25334d0f78416))
+
+
 ## v1.2.0 (2026-01-02)
 
 ### Features
