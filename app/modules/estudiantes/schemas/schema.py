@@ -1,6 +1,6 @@
 """Esquemas para el módulo de estudiantes"""
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
-from app.modules.estudiantes.models.student import StatusStudent
+from app.modules.estudiantes.models.student import StatusStudent, TypeDocumentStudent
 from app.modules.estudiantes.models.program_student import StatusStudentProgram
 
 class PersonBase(BaseModel):
@@ -11,7 +11,7 @@ class PersonBase(BaseModel):
 
     # Campos opcionales
     identity_document: str | None= Field(default=None, max_length=20)
-    type_document: str | None = Field(default=None)
+    type_document: TypeDocumentStudent | None = Field(default=None)
     nationality: str | None = Field(default=None, max_length=100)
     phone: str | None = Field(default=None, max_length=15)
     academic_email: EmailStr | None = Field(default=None, max_length=100)
