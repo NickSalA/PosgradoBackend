@@ -2,6 +2,20 @@
 
 <!-- version list -->
 
+## v1.2.0 (2026-01-02)
+
+### Features
+
+- Integración de Loguru para un mejor logging
+  ([`46cb6d9`](https://github.com/NickSalA/PosgradoBackend/commit/46cb6d9d9e047f95b30da36c0a8fa3930f4847e1))
+
+### Refactoring
+
+- Refactorización de modelos y esquemas de estudiantes, eliminación de endpoint raíz en main.py y
+  ajustes en la configuración de pylint
+  ([`42b73b1`](https://github.com/NickSalA/PosgradoBackend/commit/42b73b1b419be32500bf3f994e11b0ce35b959d5))
+
+
 ## v1.1.0 (2025-12-29)
 
 ### Features
