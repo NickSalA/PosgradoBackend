@@ -1,10 +1,10 @@
 """Patrón Factory para crear la aplicación."""
 
-# Logging
-import logging.config
-
 # Context manager para lifespan
 from contextlib import asynccontextmanager
+
+# Logging
+from loguru import logger
 
 # FastAPI y middlewares
 from fastapi import FastAPI, Request
@@ -16,7 +16,10 @@ from starlette.middleware.sessions import SessionMiddleware
 from app.core.config import settings
 
 # Configuración de logging
-from app.core.logging_config import LOGGING_CONFIG
+from app.core.logger import setup
+
+# Middleware para logging
+from app.middleware import LoguruMiddleware
 
 # Excepciones personalizadas
 from app.core.exceptions import AppError
@@ -40,8 +43,6 @@ from app.modules.proceso.controller.router import router as router_proceso
 from app.modules.recordatorios.controller.router import router as router_recordatorios
 from app.modules.tareas.controller.router import router as router_tareas
 
-logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger("Factory")
 
 def create() -> FastAPI:
     """Crea y configura la aplicación FastAPI."""
@@ -51,6 +52,7 @@ def create() -> FastAPI:
         """
         Context manager para el ciclo de vida de la aplicación.
         """
+        setup()
         logger.info("Iniciando la aplicación Posgrado Backend...")
         yield
         logger.info("Cerrando la aplicación Posgrado Backend...")
@@ -91,8 +93,11 @@ def create() -> FastAPI:
         # session_cookie="support_session",
     )
 
+    # Middleware de logging con Loguru
+    app.add_middleware(LoguruMiddleware)
+
     @app.exception_handler(AppError)
-    async def app_error_handler(request: Request, exc: AppError):
+    async def app_error_handler(request: Request, exc: AppError) -> JSONResponse:
         """
         Gestor global para excepciones de AppError.
         Args:
@@ -102,26 +107,41 @@ def create() -> FastAPI:
             JSONResponse: Respuesta JSON con detalles del error.
         """
         status_code = getattr(exc, "status_code", 500)
-        method = request.method
-        url = request.url.path
-        request_id = request.headers.get("X-Request-ID", "Desconocido")
-        ip = request.client.host if request.client else "Desconocida"
-
-        log_message = f"[{request_id}] | {method} {url} | IP: {ip} | Error: {str(exc)}"
-
+        request_id = getattr(request.state, "request_id", "Desconocido")
         if status_code >= 500:
-            logger.error("CRITICO: %s", log_message)
+            logger.error(f"[{request_id}] CRITICO: {str(exc)}")
         elif status_code >= 400:
-            logger.warning("CLIENTE: %s", log_message)
+            logger.warning(f"[{request_id}] CLIENTE: {str(exc)}")
         else:
-            logger.info("INFO: %s", log_message)
-
+            logger.info(f"[{request_id}] INFO: {str(exc)}")
         return JSONResponse(
             status_code=status_code,
             content={
                 "error": True, 
                 "type": exc.__class__.__name__, 
                 "message": str(exc)},
+        )
+
+    @app.exception_handler(Exception)
+    async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+        """
+        Gestor global para excepciones no manejadas. Evita exponer detalles internos.
+        Args:
+            request (Request): Objeto de la solicitud entrante.
+            exc (Exception): Excepción capturada.
+        Returns:
+            JSONResponse: Respuesta JSON genérica de error.
+        """
+        request_id = getattr(request.state, "request_id", "Desconocido")
+        error_message = f"{type(exc).__name__}: {str(exc)}"
+        logger.exception(f"[{request_id}] Error no manejado: {error_message}")
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": True,
+                "type": "InternalServerError",
+                "message": "Ocurrió un error interno en el servidor.",
+            },
         )
 
     @app.get("/")

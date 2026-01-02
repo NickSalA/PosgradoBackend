@@ -3,7 +3,7 @@
 import sys
 
 # Logging
-import logging.config
+from loguru import logger
 
 # FastAPI
 from fastapi import FastAPI
@@ -12,14 +12,8 @@ from pydantic import ValidationError
 # Uvicorn para correr la app
 import uvicorn
 
-# Configuración de logging
-from app.core.logging_config import LOGGING_CONFIG
-
 # Excepciones personalizadas
 from app.core.exceptions import AzureAuthError
-
-logging.config.dictConfig(LOGGING_CONFIG)
-logger = logging.getLogger(__name__)
 
 # Importar gestor de secretos
 try:
@@ -27,16 +21,16 @@ try:
     app: FastAPI = create()
     logger.debug("Configuración importada correctamente.")
 except AzureAuthError as e:
-    logger.exception("Error de autenticación con Azure Key Vault: %s", e)
+    logger.exception(f"Error de autenticación con Azure Key Vault: {e}")
     sys.exit(1)
 except ValidationError as e:
-    logger.exception("Error de validación en la configuración (Pydantic): %s", e)
+    logger.exception(f"Error de validación en la configuración (Pydantic): {e}")
     sys.exit(1)
 except ValueError as e:
-    logger.exception("Error de valor en la configuración: %s", e)
+    logger.exception(f"Error de valor en la configuración: {e}")
     sys.exit(1)
 except Exception as e: # pylint: disable=broad-except
-    logger.exception("Error inesperado al importar la configuración: %s", e)
+    logger.exception(f"Error inesperado al importar la configuración: {e}")
     sys.exit(1)
 
 if __name__ == "__main__":

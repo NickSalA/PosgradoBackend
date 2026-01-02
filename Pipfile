@@ -16,6 +16,8 @@ pytest = "*"
 httpx = "*"
 pytest-asyncio = "*"
 pydantic-settings = "*"
+loguru = "*"
+logtail-python = "*"
 
 [dev-packages]
 
