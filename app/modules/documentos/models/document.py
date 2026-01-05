@@ -10,7 +10,6 @@ class ReceptionStatus(str, Enum):
     RECIBIDO = "recibido"
     NO_RECIBIDO = "no_recibido"
 
-
 class DeliveryStatus(str, Enum):
     ENTREGADO = "entregado"
     NO_ENTREGADO = "no_entregado"
