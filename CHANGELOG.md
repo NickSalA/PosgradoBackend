@@ -2,6 +2,14 @@
 
 <!-- version list -->
 
+## v1.4.0 (2026-01-04)
+
+### Features
+
+- Implementación de los modelos para la gestion de procesos y documentos
+  ([`23a2a33`](https://github.com/NickSalA/PosgradoBackend/commit/23a2a33187f547d10bc3924bea00dc7f7411a7a5))
+
+
 ## v1.3.0 (2026-01-02)
 
 
